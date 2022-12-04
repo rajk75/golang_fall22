@@ -13,6 +13,9 @@ type Welcome struct {
 	Time string
 }
 
+
+
+
 // Go application entrypoint
 func main() {
 	//Instantiate a Welcome struct object and pass in some random information.
