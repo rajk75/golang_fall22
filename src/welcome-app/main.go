@@ -18,6 +18,18 @@ type JsonResponse struct {
 	Value1     string     `json:"key1"`
 	Value2     string     `json:"key2"`
 	JsonNested JsonNested `json:"JsonNested"`
+	JsonNew    JsonNew    `json:"JsonNew"`
+}
+
+type JsonNew struct {
+	Nested1     string      `json:"FirstName"`
+	Nested2     string      `json:"LastName"`
+	JsonAddress JsonAddress `json:"JsonAddress"`
+}
+
+type JsonAddress struct {
+	NewNest1 string `json:"Street"`
+	NewNest2 string `json:"City"`
 }
 
 type JsonNested struct {
@@ -32,14 +44,26 @@ func main() {
 	templates := template.Must(template.ParseFiles("templates/welcome-template.html"))
 
 	nested := JsonNested{
-		NestedValue1: "first nested value",
-		NestedValue2: "second nested value",
+		NestedValue1: "Raj",
+		NestedValue2: "Kotak",
+	}
+
+	newdouble := JsonAddress{
+		NewNest1: "lb nagar, kothapet",
+		NewNest2: "Mumbai",
+	}
+
+	newnest := JsonNew{
+		Nested1:     "rahul",
+		Nested2:     "dravid",
+		JsonAddress: newdouble,
 	}
 
 	jsonResp := JsonResponse{
 		Value1:     "some Data",
 		Value2:     "other Data",
 		JsonNested: nested,
+		JsonNew:    newnest,
 	}
 
 	http.Handle("/static/",
@@ -60,7 +84,9 @@ func main() {
 		json.NewEncoder(w).Encode(jsonResp)
 	})
 
-	
+	http.HandleFunc("/JsonNew", func(w http.ResponseWriter, r *http.Request) {
+		json.NewEncoder(w).Encode(newnest)
+	})
 
 	fmt.Println("Listening")
 	fmt.Println(http.ListenAndServe(":8080", nil))
